@@ -2,6 +2,7 @@ import React from 'react'
 // import * as BooksAPI from './BooksAPI'
 import './App.css'
 import * as BooksAPI from './BooksAPI'
+import BookPreview from './BookPreview'
 
 class BooksApp extends React.Component {
 
@@ -18,24 +19,36 @@ class BooksApp extends React.Component {
     showSearchPage: false,
     currentlyReadingBooks: [],
     wantToReadBooks: [],
-    readBooks: []
+    readBooks: [],
+    books: []
   }
 
   componentDidMount() {
+    // Using BookAPI getAll to get all books from server
     BooksAPI.getAll().then((books) =>  {
-      console.log(books)
+      // Filter books shelf on 3 categories
       this.setState({
         currentlyReadingBooks: books.filter((b) => b.shelf === "currentlyReading"),
         wantToReadBooks: books.filter((b) => b.shelf === "wantToRead"),
-        readBooks: books.filter((b) => b.shelf == "read")
+        readBooks: books.filter((b) => b.shelf === "read"),
+        books: books
       })
     })
   }
 
-
+ /*
+  @param book - Book Object
+  @param shelf - String, shelf category
+ */
   updateBookShelf(book, shelf) {
+    // Use Books api to update shelf status
     BooksAPI.update(book, shelf).then((response) => {
-      console.log(response)
+      // Update state using books ids from response
+      this.setState({
+        currentlyReadingBooks: this.state.books.filter((b) => response.currentlyReading.includes(b.id)),
+        wantToReadBooks: this.state.books.filter((b) => response.wantToRead.includes(b.id)),
+        readBooks: this.state.books.filter((b) => response.read.includes(b.id))
+      })
     })
   }
 
@@ -77,25 +90,8 @@ class BooksApp extends React.Component {
                   <h2 className="bookshelf-title">Currently Reading</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                     {this.state.currentlyReadingBooks.map((book, i) =>
-                       <li key={i}>
-                         <div className="book">
-                           <div className="book-top">
-                             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                             <div className="book-shelf-changer">
-                               <select>
-                                 <option value="none" disabled>Move to...</option>
-                                 <option value="currentlyReading">Currently Reading</option>
-                                 <option value="wantToRead">Want to Read</option>
-                                 <option value="read">Read</option>
-                                 <option value="none">None</option>
-                               </select>
-                             </div>
-                           </div>
-                           <div className="book-title">{book.title}</div>
-                           <div className="book-authors">{book.authors.map(a => a)}</div>
-                         </div>
-                       </li>
+                     {this.state.currentlyReadingBooks.map((book) =>
+                       <BookPreview key={book.id} book={book} updateBook={(b,s) => this.updateBookShelf(b, s)}/>
                      )}
                     </ol>
                   </div>
@@ -104,25 +100,8 @@ class BooksApp extends React.Component {
                   <h2 className="bookshelf-title">Want to Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                    {this.state.wantToReadBooks.map((book, i) =>
-                      <li key={i}>
-                        <div className="book">
-                          <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                            <div className="book-shelf-changer">
-                              <select>
-                                <option value="none" disabled>Move to...</option>
-                                <option value="currentlyReading">Currently Reading</option>
-                                <option value="wantToRead">Want to Read</option>
-                                <option value="read">Read</option>
-                                <option value="none">None</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="book-title">{book.title}</div>
-                          <div className="book-authors">{book.authors.map(a => a)}</div>
-                        </div>
-                      </li>
+                    {this.state.wantToReadBooks.map((book) =>
+                      <BookPreview key={book.id} book={book} updateBook={(b,s) => this.updateBookShelf(b, s)}/>
                     )}
                     </ol>
                   </div>
@@ -131,25 +110,8 @@ class BooksApp extends React.Component {
                   <h2 className="bookshelf-title">Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                    {this.state.readBooks.map((book, i) =>
-                      <li key={i}>
-                        <div className="book">
-                          <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                            <div className="book-shelf-changer">
-                              <select>
-                                <option value="none" disabled>Move to...</option>
-                                <option value="currentlyReading">Currently Reading</option>
-                                <option value="wantToRead">Want to Read</option>
-                                <option value="read">Read</option>
-                                <option value="none">None</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="book-title">{book.title}</div>
-                          <div className="book-authors">{book.authors.map(a => a)}</div>
-                        </div>
-                      </li>
+                    {this.state.readBooks.map((book) =>
+                      <BookPreview key={book.id} book={book} updateBook={(b,s) => this.updateBookShelf(b, s)}/>
                     )}
                     </ol>
                   </div>
