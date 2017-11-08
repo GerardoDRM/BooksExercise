@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 
 class BookPreview extends Component {
 
@@ -32,7 +32,7 @@ class BookPreview extends Component {
             </div>
           </div>
           <div className="book-title">{book.title}</div>
-          <div className="book-authors">{book.authors.map(a => a)}</div>
+          <div className="book-authors">{book.authors && book.authors.map(a => a)}</div>
         </div>
       </li>
     );

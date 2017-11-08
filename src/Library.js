@@ -4,6 +4,12 @@ import { Link } from 'react-router-dom'
 
 class Library extends Component {
 
+  static propTypes = {
+    currentlyReadingBooks: PropTypes.array.isRequired,
+    wantToReadBooks: PropTypes.array.isRequired,
+    readBooks: PropTypes.array.isRequired,
+    updateBookShelf: PropTypes.func.isRequired
+  }
 
   render() {
     const {currentlyReadingBooks, wantToReadBooks, readBooks, updateBookShelf} = this.props
