@@ -43,7 +43,8 @@ class BooksApp extends React.Component {
     BooksAPI.update(book, shelf).then((response) => {
       // Update state using books ids from response
       // Merge retrived and current books
-      var complete_books = [...this.state.books, book]
+      book.shelf = shelf;
+      var complete_books = [...this.state.books.filter(e => e.id !== book.id), book]
       this.setState({
         currentlyReadingBooks: complete_books.filter((b) => response.currentlyReading.includes(b.id)),
         wantToReadBooks: complete_books.filter((b) => response.wantToRead.includes(b.id)),

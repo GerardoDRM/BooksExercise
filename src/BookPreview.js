@@ -13,6 +13,10 @@ class BookPreview extends Component {
       updateBook(book, e.target.value)
   }
 
+  currentSelection(book) {
+    return book.shelf !== undefined ? book.shelf : "none";
+  }
+
   render() {
     const {book} = this.props;
 
@@ -22,7 +26,7 @@ class BookPreview extends Component {
           <div className="book-top">
             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
             <div className="book-shelf-changer">
-              <select onChange={(e) => this.checkShelfChange(e)}>
+              <select value={this.currentSelection(book)} onChange={(e) => this.checkShelfChange(e)}>
                 <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>

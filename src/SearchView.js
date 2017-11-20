@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router-dom'
 import BookPreview from './BookPreview'
+import { Debounce } from 'react-throttle';
 
 class SearchView extends Component {
 
@@ -31,8 +32,9 @@ class SearchView extends Component {
               you don't find a specific author or title. Every search is limited by search terms.
             */
           }
-          <input type="text" placeholder="Search by title or author" onChange={(e) => this.searchData(e)}/>
-
+          <Debounce time="400" handler="onChange">
+            <input type="text" placeholder="Search by title or author" onChange={(e) => this.searchData(e)}/>
+          </Debounce>
         </div>
       </div>
       <div className="search-books-results">
