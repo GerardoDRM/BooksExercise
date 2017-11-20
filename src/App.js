@@ -61,11 +61,20 @@ class BooksApp extends React.Component {
    searchBook(query) {
      // Use Books api to search books
      BooksAPI.search(query, 20).then((response) => {
-        //  Update list of retrieved books
         if(response && !("error" in response)) {
-            this.setState({
-              retrievedBooks: response
-            })
+          var booksIds = this.state.books.map(b => b.id);
+          //  Update list of retrieved books
+          var books = response.map(b => {
+            // Check if book already has an state
+            var idx = booksIds.indexOf(b.id);
+            if(idx > -1) {
+              return this.state.books[idx];
+            }
+            return b;
+          })
+          this.setState({
+            retrievedBooks: books
+          })
         }
      })
    }
